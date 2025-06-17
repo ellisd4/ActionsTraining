@@ -28,4 +28,38 @@ jobs:
         run: |
           echo " The repository ${{ github.repository }} contains the following files: "
           tree
+  Test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    needs: Build
+    enviroment: Test
+    steps:
+      - run: echo " Testing... "
+
+  Load-Test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    needs: Build
+    enviroment: Load-Test
+    steps:
+      - run: |
+          echo " Load Testing... "
+          sleep 15
+  
+  Production:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    needs: [Build, Test, Load-Test]
+    enviroment: 
+      name: Production
+      url: https://github.com
+    if: github.event.inputs.enviroment == 'Production'
+    steps:
+      - run: |
+          echo " Deploying to production... "
+          sleep 10
+      - run: echo " The environment is ${{ github.event.inputs.enviroment }} "
+      - run: echo " The job was triggered by event: ${{ github.event_name }} "
+      - run: echo " The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }} ."
+
       
