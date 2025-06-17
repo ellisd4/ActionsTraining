@@ -6,15 +6,17 @@ on:
         description: 'Name of the person to greet'
         required: true
         type: string
-        default: 'World'
+        default: 'World'    
     outputs:
       time:
         description: 'The time when the greeting was made'
-        value: ${{ jobs.steps.Time.outputs.time }}
+        value: ${{ jobs.reusable-job.outputs.time }}
 
 jobs:
   reusable-job:
     runs-on: ubuntu-latest
+    outputs:
+      time: ${{ steps.Time.outputs.time }}
     steps:
       - name: Greet
         run: echo "Hello, ${{ inputs.name }}!"
