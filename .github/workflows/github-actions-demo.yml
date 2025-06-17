@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     needs: Build
-    enviroment: Test
+    environment: Test
     steps:
       - run: echo " Testing... "
 
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     needs: Build
-    enviroment: Load-Test
+    environment: Load-Test
     steps:
       - run: |
           echo " Load Testing... "
@@ -48,9 +48,8 @@ jobs:
   
   Production:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
     needs: [Build, Test, Load-Test]
-    enviroment: 
+    environment: 
       name: Production
       url: https://github.com
     if: github.event.inputs.enviroment == 'Production'
@@ -59,7 +58,5 @@ jobs:
           echo " Deploying to production... "
           sleep 10
       - run: echo " The environment is ${{ github.event.inputs.enviroment }} "
-      - run: echo " The job was triggered by event: ${{ github.event_name }} "
+      - run: echo " The job was triggered by event ${{ github.event_name }} "
       - run: echo " The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }} ."
-
-      
